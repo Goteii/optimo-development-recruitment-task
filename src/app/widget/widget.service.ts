@@ -4,27 +4,83 @@ import { OpenWeatherApiService } from 'src/api/open-weather/open-weather.service
 import { City } from './models/city.model';
 import { CITY_COUNT } from './const/city-count.const';
 import { OpenWeatherCurrentWeather } from 'src/shared/models/open-weather-current-weather/current-weather.model';
+import {
+  concat,
+  concatMap,
+  delay,
+  interval,
+  Observable,
+  of,
+  Subscription,
+  switchMap,
+  take,
+} from 'rxjs';
+import { Group } from 'src/shared/models/group/group.model';
+import { INTERVAL } from './const/interval.const';
+import { RETRY_COUNT_BEFORE_REFRESH } from './const/retry-count-before-new-data';
 
 @Injectable({ providedIn: 'root' })
 export class WidgetService {
   readonly #api = inject(OpenWeatherApiService);
 
-  readonly #cities = CITIES;
-  readonly #cityCount = CITY_COUNT;
-
   readonly currentCityGroup = signal<string>('');
   readonly widgetData = signal<OpenWeatherCurrentWeather[]>([]);
+  readonly #cities = CITIES;
+  readonly #cityCount = CITY_COUNT;
+  readonly #interval = INTERVAL;
+  readonly #retryCount = RETRY_COUNT_BEFORE_REFRESH;
 
-  getWidgetRandomCitiesData(): void {
+  subscription$!: Subscription;
+
+  getWidgetDataInSequence(): void {
+    this.subscription$ = this.startRequestSequence().subscribe({
+      next: (response) => {
+        this.setWidgetData(response.list);
+      },
+      error: (error) => {
+        throw new Error(
+          'Error occurred in getWidgetDataInSequence method:' + error.message
+        );
+      },
+      complete: () => {
+        this.getWidgetDataInSequence();
+      },
+    });
+  }
+
+  getWidgetRandomCitiesDataOnInit(): void {
+    this.getWidgetRandomCitiesData().subscribe((data) => {
+      this.setWidgetData(data.list);
+    });
+  }
+
+  private getWidgetRandomCitiesData(): Observable<
+    Group<OpenWeatherCurrentWeather>
+  > {
     const selectedCitiesIds = this.getRandomCitiesGroup(this.#cities);
     this.setCurrentCityGroup(selectedCitiesIds);
 
-    this.getWidgetData(selectedCitiesIds);
+    return this.#api.getData(selectedCitiesIds);
   }
 
-  getWidgetRefreshedData(): void {
+  private startRequestSequence(): Observable<Group<OpenWeatherCurrentWeather>> {
+    return concat(
+      interval(this.#interval).pipe(
+        take(this.#retryCount),
+        concatMap(() => this.getWidgetRefreshedData())
+      ),
+      of(null).pipe(
+        switchMap(() => this.getWidgetRandomCitiesData()),
+        delay(this.#interval)
+      )
+    );
+  }
+
+  private getWidgetRefreshedData(): Observable<
+    Group<OpenWeatherCurrentWeather>
+  > {
     const ids = this.currentCityGroup();
-    this.getWidgetData(ids);
+    return this.#api.getData(ids);
   }
 
   private getRandomCitiesGroup(arr: City[]): string {
@@ -54,12 +110,6 @@ export class WidgetService {
 
   private getRandomIdx(arrLen: number): number {
     return Math.floor(Math.random() * arrLen);
-  }
-
-  private getWidgetData(ids: string): void {
-    this.#api.getData(ids).subscribe((data) => {
-      this.setWidgetData(data.list);
-    });
   }
 
   private setCurrentCityGroup(val: string): void {
