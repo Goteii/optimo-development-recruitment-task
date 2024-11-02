@@ -14,7 +14,7 @@ export const authInterceptor: HttpInterceptorFn = (
   if (req.url.startsWith('http')) {
     const key = OPEN_WEATHER_API_KEY;
     const updatedRequest = req.clone({
-      url: req.url + '&appid=' + key,
+      url: req.urlWithParams + '&appid=' + key,
     });
     return next(updatedRequest);
   }

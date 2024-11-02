@@ -41,7 +41,8 @@
     },
     "@nx/angular:component": {
       "style": "scss",
-      "changeDetection": "OnPush"
+      "changeDetection": "OnPush",
+      "skipTests": true
     }
   },
   "defaultProject": "optimo-development-recruitment-task"

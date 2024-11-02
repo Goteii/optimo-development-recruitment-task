@@ -1,16 +1,23 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { ENDPOINT } from '../endpoints';
-import { Observable } from 'rxjs';
 import { OpenWeatherCurrentWeather } from 'src/shared/models/open-weather-current-weather/current-weather.model';
+import { Observable } from 'rxjs/internal/Observable';
+import { Group } from 'src/shared/models/group/group.model';
 
 @Injectable({ providedIn: 'root' })
 export class OpenWeatherApiService {
   readonly #http = inject(HttpClient);
 
-  getData(): Observable<OpenWeatherCurrentWeather> {
-    return this.#http.get<OpenWeatherCurrentWeather>(
-      ENDPOINT.openWeatherCurrentWeather
+  getData(
+    selectedCities: string
+  ): Observable<Group<OpenWeatherCurrentWeather>> {
+    const options = {
+      params: new HttpParams().set('id', selectedCities),
+    };
+    return this.#http.get<Group<OpenWeatherCurrentWeather>>(
+      ENDPOINT.openWeatherCurrentWeather,
+      options
     );
   }
 }
