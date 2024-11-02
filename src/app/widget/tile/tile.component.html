@@ -1,0 +1,19 @@
+@if(data(); as data) {
+<a [href]="data.urlOnClick" target="_blank">
+  <div class="p-4 rounded bg-tile-bg">
+    <div class="flex justify-between text-text">
+      <div class="flex items-center gap-2">
+        <div>
+          <img src="assets/icons/location.svg" alt="" />
+        </div>
+        <p class="text-lg">{{ data.name }}, {{ data.country }}</p>
+      </div>
+      <p class="description">{{ data.weatherDescription }}</p>
+    </div>
+    <div class="flex items-center justify-between text-text">
+      <p class="text-[30px]">{{ data.temperature }}&#8451;</p>
+      <img [src]="data.weatherIcon" alt="" />
+    </div>
+  </div>
+</a>
+}

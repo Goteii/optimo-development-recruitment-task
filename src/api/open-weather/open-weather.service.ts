@@ -13,7 +13,7 @@ export class OpenWeatherApiService {
     selectedCities: string
   ): Observable<Group<OpenWeatherCurrentWeather>> {
     const options = {
-      params: new HttpParams().set('id', selectedCities),
+      params: new HttpParams().set('id', selectedCities).set('units', 'metric'),
     };
     return this.#http.get<Group<OpenWeatherCurrentWeather>>(
       ENDPOINT.openWeatherCurrentWeather,

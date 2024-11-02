@@ -1,2 +1,12 @@
-<p>widget works!</p>
-<p>{{ data() | json }}</p>
+<section class="flex overflow-hidden bg-red-100 w-dvw">
+  @if(initData().length && !data().length) { @for(tile of initData(); track
+  $index) {
+  <div class="w-full md:w-1/2 lg:w-1/3">
+    <optimo-development-tile [data]="tile" />
+  </div>
+  } } @else { @for(tile of data(); track $index) {
+  <div class="w-full md:w-1/2 lg:w-1/3">
+    <optimo-development-tile [data]="tile" />
+  </div>
+  } }
+</section>

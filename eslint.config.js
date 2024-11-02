@@ -21,7 +21,7 @@ module.exports = [
         'error',
         {
           type: 'attribute',
-          prefix: 'app',
+          prefix: 'optimo-development',
           style: 'camelCase',
         },
       ],
@@ -29,7 +29,7 @@ module.exports = [
         'error',
         {
           type: 'element',
-          prefix: 'app',
+          prefix: 'optimo-development',
           style: 'kebab-case',
         },
       ],

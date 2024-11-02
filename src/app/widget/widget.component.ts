@@ -4,27 +4,31 @@ import {
   inject,
   input,
   OnInit,
+  signal,
 } from '@angular/core';
 import { WidgetService } from './widget.service';
-import { OpenWeatherCurrentWeather } from 'src/shared/models/open-weather-current-weather/current-weather.model';
-import { JsonPipe } from '@angular/common';
+import { TileComponent } from './tile/tile.component';
+import { WidgetData } from './models/widget-data.model';
 
 @Component({
-  selector: 'app-widget',
+  selector: 'optimo-development-widget',
   standalone: true,
-  imports: [JsonPipe],
+  imports: [TileComponent],
   templateUrl: './widget.component.html',
   styleUrl: './widget.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class WidgetComponent implements OnInit {
   readonly #widget = inject(WidgetService);
+
+  readonly initData = input.required<WidgetData[]>();
   readonly data = this.#widget.widgetData;
 
-  readonly widgetData = input.required<OpenWeatherCurrentWeather>();
+  readonly currentItemIdx = signal<number>(0);
 
   ngOnInit(): void {
-    this.#widget.getWidgetRandomCitiesDataOnInit();
+    console.log('init data', this.initData());
+    console.log('data', this.data());
     this.#widget.getWidgetDataInSequence();
   }
 }
