@@ -68,7 +68,7 @@ export class WidgetService {
       country: obj.sys.country,
       weatherDescription: obj.weather[0].description,
       weatherIcon: getWeatherIcon(obj.weather[0].icon),
-      temperature: Math.floor(obj.main.temp),
+      temperature: Math.round(obj.main.temp),
     }));
   }
 

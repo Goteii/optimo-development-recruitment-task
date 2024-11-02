@@ -1,0 +1,7 @@
+.container {
+  @apply max-w-none w-full mx-0;
+  @apply sm:w-[calc(100%-32px)] sm:mx-auto;
+  @apply lg:w-[calc(100%-80px)];
+  @apply xl:w-[calc(100%-100px)];
+  @apply 2xl:max-w-[1920px];
+}

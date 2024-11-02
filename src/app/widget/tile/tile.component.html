@@ -1,18 +1,26 @@
 @if(data(); as data) {
 <a [href]="data.urlOnClick" target="_blank">
-  <div class="p-4 rounded bg-tile-bg">
-    <div class="flex justify-between text-text">
+  <div class="py-5 px-14 bg-tile-bg flex justify-between md:rounded h-[150px]">
+    <div class="flex flex-col justify-between text-text">
       <div class="flex items-center gap-2">
-        <div>
-          <img src="assets/icons/location.svg" alt="" />
+        <div class="lg:size-8">
+          <img src="assets/icons/location.svg" alt="" class="w-full h-full" />
         </div>
-        <p class="text-lg">{{ data.name }}, {{ data.country }}</p>
+        <p class="text-lg lg:text-[28px]">
+          {{ data.name }}, {{ data.country }}
+        </p>
       </div>
-      <p class="description">{{ data.weatherDescription }}</p>
+      <p class="text-[28px] lg:text-[32px]">{{ data.temperature }}&#8451;</p>
     </div>
-    <div class="flex items-center justify-between text-text">
-      <p class="text-[30px]">{{ data.temperature }}&#8451;</p>
-      <img [src]="data.weatherIcon" alt="" />
+    <div class="flex flex-col items-end justify-between text-text">
+      <p class="text-lg description lg:text-[32px]">
+        {{ data.weatherDescription }}
+      </p>
+      <!-- workaround with margin-top because image from API has a "safe-space" around which messes up the
+       widget styles-->
+      <div class="mt-4 size-20">
+        <img [src]="data.weatherIcon" alt="" class="w-full h-full" />
+      </div>
     </div>
   </div>
 </a>

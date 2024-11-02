@@ -1,0 +1,14 @@
+<section class="carousel">
+  @if(data(); as data) { @for(tile of data; track $index) { @if($index ===
+  currentSlide()) {
+  <optimo-development-tile [data]="tile" />
+  } } }
+  <div>
+    <button class="control prev" (click)="onPreviousClick()">
+      <span class="arrow left"></span>
+    </button>
+    <button class="control next" (click)="onNextClick()">
+      <span class="arrow right"></span>
+    </button>
+  </div>
+</section>
