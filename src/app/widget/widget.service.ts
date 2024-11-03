@@ -38,6 +38,7 @@ export class WidgetService {
   subscription$!: Subscription;
 
   getWidgetDataInSequence(): void {
+    this.subscription$?.unsubscribe();
     this.subscription$ = this.startRequestSequence().subscribe({
       next: (response) => {
         console.log(response.list);
